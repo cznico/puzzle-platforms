@@ -14,16 +14,29 @@ void AMovingPlatform::BeginPlay() {
 		SetReplicates(true);
 		SetReplicateMovement(true);
 	}
+
+	StartLocation = GetActorLocation();	
+	EndLocation = GetTransform().TransformPosition(TargetLocation);
 }
 
 void AMovingPlatform::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
 
 	if (HasAuthority()) {
-		UE_LOG(LogTemp, Warning, TEXT("Platform ticks"))
-			auto location = GetActorLocation();
-		location += FVector(MovementSpeed * DeltaTime, 0, 0);
-		SetActorLocation(location);
+		FVector CurrentLocation = GetActorLocation();
+		FVector Direction = EndLocation - StartLocation;
+		float Distance = (EndLocation - CurrentLocation).Size();
+		float Step = MovementSpeed * DeltaTime;
+
+		if (Distance < Step) {
+			CurrentLocation = EndLocation;
+			EndLocation = StartLocation;
+			StartLocation = CurrentLocation;
+		}
+		else {
+			CurrentLocation += Step * Direction.GetSafeNormal();
+			SetActorLocation(CurrentLocation);
+		}
 	}
 	
 }

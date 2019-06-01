@@ -17,7 +17,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Setup)
 	float MovementSpeed = 10.0;
 
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Setup, Meta = (MakeEditWidget = true))
+	FVector TargetLocation;
+	FVector StartLocation;
+	FVector EndLocation;
 public:
 	AMovingPlatform();
 
