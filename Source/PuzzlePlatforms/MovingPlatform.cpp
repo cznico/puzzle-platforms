@@ -8,6 +8,19 @@ AMovingPlatform::AMovingPlatform() {
 	SetMobility(EComponentMobility::Movable);
 }
 
+void AMovingPlatform::AddActiveTrigger()
+{
+	ActiveTriggers++;
+}
+
+void AMovingPlatform::RemoveActiveTrigger()
+{
+	if (ActiveTriggers > 0) {
+		ActiveTriggers--;
+	}
+	
+}
+
 void AMovingPlatform::BeginPlay() {
 	Super::BeginPlay();
 	if (HasAuthority()) {
@@ -22,7 +35,7 @@ void AMovingPlatform::BeginPlay() {
 void AMovingPlatform::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
 
-	if (HasAuthority()) {
+	if (HasAuthority() && ActiveTriggers > 0) {
 		FVector CurrentLocation = GetActorLocation();
 		FVector Direction = EndLocation - StartLocation;
 		float Distance = (EndLocation - CurrentLocation).Size();
